@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Coffee Shop Passport — Brew Log</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>☕</text></svg>" />
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+<a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+
+<header class="cover">
+  <div class="wrap cover-inner">
+    <div class="cover-title">
+      <p class="eyebrow">Brew Log · Edisi Pribadi</p>
+      <h1>Coffee Shop Passport</h1>
+      <p class="tagline">Tiap kafe dapat satu cap. Rasa, kota, dan vibe-nya tersimpan.</p>
+    </div>
+    <p class="tally"><span class="tally-num" id="stamp-count">0</span><span class="tally-label">cap terkumpul</span></p>
+  </div>
+</header>
+
+<main id="main-content" class="wrap" tabindex="-1">
+  <p id="live-region" class="sr-only" aria-live="polite"></p>
+  <p id="boot-error" class="alert alert-danger" role="alert"></p>
+  <p id="boot-notice" class="alert alert-warn" role="status"></p>
+  <noscript><p class="alert alert-danger">Aktifkan JavaScript untuk memakai Brew Log.</p></noscript>
+
+  <div class="layout">
+    <section class="panel" aria-labelledby="form-heading">
+      <h2 id="form-heading" class="panel-title">Bubuhkan cap baru</h2>
+      <form id="entry-form" novalidate>
+        <div class="field">
+          <label for="f-name">Nama kafe</label>
+          <input id="f-name" name="name" type="text" maxlength="60" autocomplete="off" placeholder="Kopi Toko Djawa" aria-describedby="e-name" />
+          <p class="err" id="e-name"></p>
+        </div>
+        <div class="field">
+          <label for="f-city">Kota / lingkungan</label>
+          <input id="f-city" name="city" type="text" maxlength="60" autocomplete="off" placeholder="Bandung — Braga" aria-describedby="e-city" />
+          <p class="err" id="e-city"></p>
+        </div>
+        <div class="field">
+          <label for="f-drink">Minuman yang dipesan</label>
+          <input id="f-drink" name="drink" type="text" maxlength="60" autocomplete="off" placeholder="Es kopi susu gula aren" aria-describedby="e-drink" />
+          <p class="err" id="e-drink"></p>
+        </div>
+        <div class="field">
+          <span class="label" id="rating-label">Rating personal</span>
+          <div class="stars" id="rating" role="radiogroup" aria-labelledby="rating-label" aria-describedby="e-rating">
+            <button type="button" role="radio" aria-checked="false" tabindex="0" aria-label="1 bintang"><span aria-hidden="true">★</span></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="2 bintang"><span aria-hidden="true">★</span></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="3 bintang"><span aria-hidden="true">★</span></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="4 bintang"><span aria-hidden="true">★</span></button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1" aria-label="5 bintang"><span aria-hidden="true">★</span></button>
+          </div>
+          <p class="err" id="e-rating"></p>
+        </div>
+        <div class="field">
+          <label for="f-notes">Catatan rasa / vibe</label>
+          <textarea id="f-notes" name="notes" rows="3" maxlength="200" placeholder="Body tebal, aftertaste cokelat. Musik pelan, kursi kayu." aria-describedby="notes-count e-notes"></textarea>
+          <p class="hint" id="notes-count">0/200 karakter</p>
+          <p class="err" id="e-notes"></p>
+        </div>
+        <button type="submit" class="btn btn-primary">Cap sekarang</button>
+        <p class="alert alert-danger" id="form-error" role="alert"></p>
+      </form>
+    </section>
+
+    <div class="collection">
+      <section class="bar" aria-labelledby="bar-heading">
+        <h2 id="bar-heading" class="sr-only">Filter dan urutan koleksi</h2>
+        <div class="bar-field">
+          <span class="label" id="filter-label">Tampilkan</span>
+          <div class="seg" role="group" aria-labelledby="filter-label">
+            <button type="button" class="seg-btn is-on" data-filter="all" aria-pressed="true">Semua</button>
+            <button type="button" class="seg-btn" data-filter="high" aria-pressed="false">4 bintang ke atas</button>
+          </div>
+        </div>
+        <div class="bar-field">
+          <label for="sort">Urutkan</label>
+          <select id="sort">
+            <option value="recent">Terbaru ditambahkan</option>
+            <option value="city">Kota A–Z</option>
+            <option value="rating">Rating tertinggi ke terendah</option>
+          </select>
+        </div>
+      </section>
+
+      <section aria-labelledby="collection-heading">
+        <h2 id="collection-heading" class="panel-title">Koleksi cap</h2>
+
+        <ul id="skeleton" class="grid" aria-hidden="true">
+          <li class="stamp skeleton"><span class="sk sk-a"></span><span class="sk sk-b"></span><span class="sk sk-c"></span><span class="sk sk-d"></span></li>
+          <li class="stamp skeleton"><span class="sk sk-a"></span><span class="sk sk-b"></span><span class="sk sk-c"></span><span class="sk sk-d"></span></li>
+          <li class="stamp skeleton"><span class="sk sk-a"></span><span class="sk sk-b"></span><span class="sk sk-c"></span><span class="sk sk-d"></span></li>
+        </ul>
+        <p class="loading-note" id="loading-note">Membuka paspor…</p>
+
+        <div class="state" id="empty" hidden>
+          <p class="state-mark" aria-hidden="true">☕</p>
+          <h3>Paspor kamu masih kosong</h3>
+          <p>Belum ada satu cap pun. Catat kafe pertama dan halaman ini mulai terisi.</p>
+          <button type="button" class="btn btn-ghost" id="empty-cta">Catat kafe pertama</button>
+        </div>
+
+        <div class="state" id="filter-empty" hidden>
+          <p class="state-mark" aria-hidden="true">🔍</p>
+          <h3>Tidak ada yang cocok dengan filter</h3>
+          <p id="filter-empty-text">Filter aktif: 4 bintang ke atas. Belum ada kafe dengan rating segitu di paspor kamu.</p>
+          <button type="button" class="btn btn-ghost" id="reset-filter">Reset filter</button>
+        </div>
+
+        <ul id="grid" class="grid" hidden></ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <p class="wrap">Disimpan lokal di browser ini saja · tanpa akun, tanpa server</p>
+</footer>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
